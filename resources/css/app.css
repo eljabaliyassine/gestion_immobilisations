@@ -1,0 +1,172 @@
+/* Styles généraux pour l'application */
+:root {
+    --primary-color: #0a3d62;
+    --secondary-color: #2d3748;
+    --success-color: #28a745;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #f5f8fa;
+}
+
+nav{
+    background-color: var(--primary-color);
+}
+
+/* Navbar styles */
+.navbar-dark.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.navbar-brand {
+    font-weight: 700;
+}
+
+.dropdown-menu {
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Card styles */
+.card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1rem 1.25rem;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+/* Table styles */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1rem;
+    border-top: none;
+}
+
+.table td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+}
+
+/* Form styles */
+.form-control {
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(10, 61, 98, 0.25);
+}
+
+.form-control-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* Button styles */
+.btn {
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0c2e46;
+    border-color: #0c2e46;
+}
+
+/* Badge styles */
+.badge {
+    padding: 0.4em 0.6em;
+    font-weight: 600;
+    border-radius: 0.25rem;
+}
+
+/* Alert styles */
+.alert {
+    border-radius: 0.25rem;
+    border: none;
+}
+
+/* Footer styles */
+.footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 1rem 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .table th, .table td {
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+/* Dossier selector highlight */
+.nav-item.dropdown .dropdown-item.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Custom styles for specific components */
+.immobilisation-card {
+    transition: transform 0.2s;
+}
+
+.immobilisation-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Pagination styles */
+.pagination {
+    justify-content: center;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.page-link {
+    color: var(--primary-color);
+}
+
+.page-link:hover {
+    color: #0c2e46;
+}
