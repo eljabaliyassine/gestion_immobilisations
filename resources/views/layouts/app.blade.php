@@ -45,8 +45,8 @@
         /* Navbar personnalisée */
         .navbar-custom {
             background-color: var(--primary-color) !important;
-            width: fit-content;
         }
+
 
         .navbar-brand {
             font-weight: 700;
@@ -134,6 +134,12 @@
         .form-control:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 0.2rem rgba(10, 61, 98, 0.25);
+        }
+
+		@media (min-width: 992px) {
+            .navbar-custom {
+                width: fit-content;
+            }
         }
 
 		@media (min-width: 992px) {
@@ -481,22 +487,23 @@
             @yield(section: 'content')
         </main>
 
-        <footer class="footer mt-auto py-4">
+        <footer class="footer mt-auto py-4 bg-light border-top">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <span class="text-muted">
+                <div class="row align-items-center text-center text-md-start">
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <span class="text-muted d-block d-md-inline">
                             <i class="bi bi-c-circle me-1"></i>{{ date('Y') }} {{ config('app.name', 'Gestion Immo') }}. Tous droits réservés.
                         </span>
                     </div>
-                    <div class="col-md-6 text-md-end">
-                        <small class="text-muted">
+                    <div class="col-12 col-md-6 text-center text-md-end">
+                        <small class="text-muted d-block d-md-inline">
                             <i class="bi bi-code-slash me-1"></i>Version 1.0
                         </small>
                     </div>
                 </div>
             </div>
         </footer>
+
     </div>
 
     <!-- Bootstrap JS Bundle -->

@@ -2,20 +2,21 @@
 
 <?php $__env->startSection("content"); ?>
 <div class="container-fluid px-4">
-    <!-- En-tête avec titre et actions principales -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">
-                <i class="fas fa-building me-2 text-primary"></i>
-                Gestion des Immobilisations
-            </h1>
-            <p class="text-muted mb-0">Gérez et suivez vos immobilisations</p>
-        </div>
-        <a href="<?php echo e(route("immobilisations.create")); ?>" class="btn btn-primary btn-lg shadow-sm">
-            <i class="fas fa-plus me-2"></i>
-            Nouvelle Immobilisation
-        </a>
+   <!-- En-tête avec titre et actions principales -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+    <div>
+        <h1 class="h4 mb-1 text-gray-800">
+            <i class="fas fa-building me-2 text-primary"></i>
+            Gestion des Immobilisations
+        </h1>
+        <p class="text-muted mb-0">Gérez et suivez vos immobilisations</p>
     </div>
+    <a href="<?php echo e(route('immobilisations.create')); ?>" class="btn btn-primary btn-sm btn-md-lg shadow-sm">
+        <i class="fas fa-plus me-2"></i>
+        Nouvelle Immobilisation
+    </a>
+</div>
+
 
     <!-- Messages d'alerte -->
     <?php if(session("success")): ?>
