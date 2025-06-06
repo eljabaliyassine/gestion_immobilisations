@@ -63,24 +63,6 @@
                     <?php echo $__env->make('user.profile.partials.update-password-form', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                 </div>
             </div>
-
-            <!-- Zone dangereuse -->
-            <div class="card border-0 shadow-sm border-danger-subtle hover-card">
-                <div class="card-header bg-danger bg-opacity-5 border-bottom-0 py-3">
-                    <div class="d-flex align-items-center">
-                        <div class="icon-wrapper bg-danger bg-opacity-10 rounded-circle p-2 me-3">
-                            <i class="fas fa-exclamation-triangle text-danger"></i>
-                        </div>
-                        <div>
-                            <h5 class="card-title mb-1 fw-semibold text-danger"><?php echo e(__('Zone Dangereuse')); ?></h5>
-                            <small class="text-muted"><?php echo e(__('Actions irréversibles sur votre compte')); ?></small>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body p-4">
-                    <?php echo $__env->make('user.profile.partials.delete-user-form', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
-                </div>
-            </div>
         </div>
 
         <!-- Sidebar avec informations utiles -->
@@ -143,20 +125,20 @@
 
                     </h6>
                     <div class="d-grid gap-2">
-                        <a href="#" class="btn btn-outline-primary btn-sm">
                         
+                        <a href="<?php echo e(route('user.download.data')); ?>" class="btn btn-outline-primary btn-sm">
                             <i class="fas fa-download me-2"></i>
                             <?php echo e(__('Télécharger mes données')); ?>
 
                         </a>
-                        <a href="#" class="btn btn-outline-secondary btn-sm">
                         
+                        <a href="<?php echo e(route('user.login.history')); ?>" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-history me-2"></i>
                             <?php echo e(__('Historique des connexions')); ?>
 
                         </a>
-                        <a href="#" class="btn btn-outline-info btn-sm">
                         
+                        <a href="<?php echo e(route('user.help.center')); ?>" class="btn btn-outline-info btn-sm">
                             <i class="fas fa-question-circle me-2"></i>
                             <?php echo e(__('Centre d\'aide')); ?>
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserActionsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
@@ -115,6 +116,11 @@ Route::prefix('inventaires')->name('inventaires.')->group(function () {
             Route::resource("fournisseurs", FournisseurController::class);
             Route::resource("prestataires", PrestataireController::class);
             Route::resource("comptescompta", CompteComptaController::class);
+
+            // Routes d'export
+            Route::get('comptescompta/export/{format}', [CompteComptaController::class, 'export'])
+            ->name('comptescompta.export')
+            ->where('format', 'excel|pdf|csv');
         });
 
         // Exports Management (Fiscal & Comptable)
@@ -178,13 +184,17 @@ Route::middleware(['auth', 'dossier.selected'])->group(function () {
     Route::patch("user/profile", [ProfileController::class, "update"])->name("user.profile.update");
     Route::put("user/profile/password", [ProfileController::class, "updatePassword"])->name("password.update");
     Route::delete("user/profile", [ProfileController::class, "destroy"])->name("user.profile.destroy");
+// Nouvelles routes pour les actions rapides
+Route::get("user/download-data", [UserActionsController::class, "downloadUserData"])->name("user.download.data");
+Route::get("user/login-history", [UserActionsController::class, "loginHistory"])->name("user.login.history");
+Route::get("user/help-center", [UserActionsController::class, "helpCenter"])->name("user.help.center");
 });
 
-// Ajoutez cette ligne avec vos autres routes d'authentification
+// Route pour la vérification email
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');// API Route for dynamic services - Moved to API routes file for better organization
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware(["auth", "dossier.selected"])->prefix('api')->name('api.')->group(function () {
     Route::get("/dossiers/{dossierId}/sites/{siteId}/services", function ($dossierId, $siteId) {
