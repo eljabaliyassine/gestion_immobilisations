@@ -24,7 +24,7 @@
 
                     <form action="{{ route('parametres.comptescompta.store') }}" method="POST">
                         @csrf
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -39,17 +39,18 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="type" class="form-control-label">Type <span class="text-danger">*</span></label>
                                     <select class="form-control" id="type" name="type" required>
                                         <option value="">Sélectionner un type</option>
-                                        <option value="actif" {{ old('type') == 'actif' ? 'selected' : '' }}>Actif</option>
-                                        <option value="passif" {{ old('type') == 'passif' ? 'selected' : '' }}>Passif</option>
-                                        <option value="charge" {{ old('type') == 'charge' ? 'selected' : '' }}>Charge</option>
-                                        <option value="produit" {{ old('type') == 'produit' ? 'selected' : '' }}>Produit</option>
+                                        <option value="immobilisation" {{ old('type') == 'immobilisation' ? 'selected' : '' }}>Immobilisation</option>
+                                        <option value="dotation" {{ old('type') == 'dotation' ? 'selected' : '' }}>Dotation</option>
+                                        <option value="amortissement" {{ old('type') == 'amortissement' ? 'selected' : '' }}>Amortissement</option>
+                                        <option value="pci" {{ old('type') == 'pci' ? 'selected' : '' }}>Produit cession</option>
+					<option value="vnc" {{ old('type') == 'vnc' ? 'selected' : '' }}>VNC</option>
                                     </select>
                                 </div>
                             </div>
@@ -60,12 +61,12 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="description" class="form-control-label">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="3">{{ old('description') }}</textarea>
                         </div>
-                        
+
                         <div class="d-flex justify-content-end mt-4">
                             <button type="submit" class="btn btn-primary">Enregistrer</button>
                         </div>

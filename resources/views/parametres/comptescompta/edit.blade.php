@@ -30,7 +30,7 @@
                     <form action="{{ route('parametres.comptescompta.update', $comptecompta->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -66,12 +66,12 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="description" class="form-control-label">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="3">{{ old('description', $comptecompta->description) }}</textarea>
                         </div>
-                        
+
                         <div class="d-flex justify-content-end mt-4">
                             <button type="submit" class="btn btn-primary">Mettre à jour</button>
                         </div>

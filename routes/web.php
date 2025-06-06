@@ -79,6 +79,13 @@ Route::middleware(["auth"])->group(function () {
             Route::get("/{immobilisation}/amortissement-exceptionnel/create", [AmortissementController::class, "createExceptionnel"])->name("amortissement.exceptionnel.create");
             Route::post("/{immobilisation}/amortissement-exceptionnel", [AmortissementController::class, "storeExceptionnel"])->name("amortissement.exceptionnel.store");
         });
+        // Routes AJAX pour les immobilisations
+        Route::post('/immobilisations/ajax/services-by-site', [ImmobilisationController::class, 'ajaxGetServicesBySite'])
+            ->name('immobilisations.ajax.services-by-site');
+
+        Route::post('/immobilisations/ajax/famille-info', [ImmobilisationController::class, 'ajaxGetFamilleInfo'])
+            ->name('immobilisations.ajax.famille-info');
+
         Route::resource("immobilisations", ImmobilisationController::class);
 
         // Routes pour les inventaires

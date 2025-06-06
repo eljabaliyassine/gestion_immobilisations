@@ -44,7 +44,9 @@
                                 <select name="client_id" id="client_id" class="form-control @error('client_id') is-invalid @enderror" required>
                                     <option value="">Sélectionner un client</option>
                                     @foreach($clients as $client)
-                                        <option value="{{ $client->id }}" {{ old('client_id', $dossier->client_id) == $client->id ? 'selected' : '' }}>
+                                        <option value="{{ $client->id }}"
+                                                data-societe-id="{{ $client->societe_id }}"
+                                                {{ old('client_id', $dossier->client_id) == $client->id ? 'selected' : '' }}>
                                             {{ $client->nom }} ({{ $client->code }})
                                         </option>
                                     @endforeach
@@ -109,12 +111,16 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="est_cloture" name="est_cloture" value="1" {{ old('est_cloture', $dossier->est_cloture) ? 'checked' : '' }}>
+                                    <!-- Ajoute ce champ hidden pour forcer la valeur à 0 si la case n'est pas cochée -->
+                                    <input type="hidden" name="est_cloture" value="0">
+                                    <input class="form-check-input" type="checkbox" id="est_cloture" name="est_cloture" value="1"
+                                           {{ old('est_cloture', $dossier->est_cloture) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="est_cloture">
                                         Dossier clôturé
                                     </label>
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <label for="date_cloture" class="form-label">Date de clôture</label>
                                 <input type="date" class="form-control @error('date_cloture') is-invalid @enderror" id="date_cloture" name="date_cloture" value="{{ old('date_cloture', $dossier->date_cloture ? $dossier->date_cloture->format('Y-m-d') : '') }}">
@@ -141,29 +147,33 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Filtrer les clients en fonction de la société sélectionnée
         const societeSelect = document.getElementById('societe_id');
         const clientSelect = document.getElementById('client_id');
         const clientOptions = Array.from(clientSelect.options);
-        
-        societeSelect.addEventListener('change', function() {
-            const societeId = this.value;
-            
-            // Réinitialiser la liste des clients
+
+        function updateClientOptions(societeId) {
             clientSelect.innerHTML = '<option value="">Sélectionner un client</option>';
-            
             if (societeId) {
-                // Filtrer les clients par société
                 const filteredClients = clientOptions.filter(option => {
                     return option.dataset.societeId === societeId;
                 });
-                
-                // Ajouter les clients filtrés
+
                 filteredClients.forEach(option => {
                     clientSelect.appendChild(option.cloneNode(true));
                 });
+
+                // Réappliquer l'ancien client sélectionné s'il est encore visible
+                const selectedClientId = "{{ old('client_id', $dossier->client_id) }}";
+                clientSelect.value = selectedClientId;
             }
+        }
+
+        societeSelect.addEventListener('change', function() {
+            updateClientOptions(this.value);
         });
+
+        // Lancer une première fois pour la sélection par défaut
+        updateClientOptions(societeSelect.value);
     });
 </script>
 @endsection

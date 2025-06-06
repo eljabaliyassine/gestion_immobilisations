@@ -312,14 +312,7 @@ class ExportController extends Controller
 
     /**
      * Generate CSV file for accounting entries (Ecritures comptables).
-     * Format: Date, Journal, Compte, Libellé, Débit, Crédit, Référence Pièce
-     * Rules:
-     * - Date: date_prochaine_cloture for all lines
-     * - Journal: "OD" for all lines
-     * - Compte: from comptescompta table
-     * - Libellé: same as Référence Pièce
-     * - Débit/Crédit: based on comptescompta.type (dotation -> Débit, amortissement -> Crédit)
-     * - Référence Pièce: "DEA du {jour_apres_date_derniere_cloture} au {date_prochaine_cloture}"
+     * Version ULTRA SIMPLIFIÉE utilisant les champs comptecompta de plans_amortissement
      */
     public function exportEcrituresComptables(): StreamedResponse
     {
@@ -356,60 +349,56 @@ class ExportController extends Controller
 
             // Calculer le jour suivant la date de dernière clôture
             $jourApresDerniereCloture = Carbon::parse($dateDerniereCloture)->addDay()->format('Y-m-d');
-            
+
             // Formater les dates pour l'affichage et la référence pièce
             $jourApresDerniereClotureFormatee = Carbon::parse($jourApresDerniereCloture)->format('d/m/Y');
             $dateProchaineClotureFormatee = Carbon::parse($dateProchaineCloture)->format('d/m/Y');
-            
+
             // Créer la référence pièce avec le jour suivant la date de dernière clôture
             $referencePiece = "DEA du " . $jourApresDerniereClotureFormatee . " au " . $dateProchaineClotureFormatee;
 
-            // Récupérer les numéros de compte uniques par type
-            $comptesAmortissement = DB::table('comptescompta')
-                ->where('dossier_id', $dossierId)
-                ->where('type', 'amortissement')
-                ->where('est_actif', 1)
-                ->distinct()
-                ->pluck('numero');
+            // ÉCRITURES DE DOTATION (DÉBIT) - Une requête ultra simple
+            $comptesDotation = DB::table('plans_amortissement as p')
+                ->join('comptescompta as c', 'p.comptecompta_dotation_id', '=', 'c.id')
+                ->where('p.dossier_id', $dossierId)
+                ->where('p.date_derniere_cloture', $dateDerniereCloture)
+                ->where('p.date_prochaine_cloture', $dateProchaineCloture)
+                ->select('c.numero', DB::raw('SUM(p.dotation_periode) as montant_total'))
+                ->groupBy('c.numero')
+                ->get();
 
-            $comptesDotation = DB::table('comptescompta')
-                ->where('dossier_id', $dossierId)
-                ->where('type', 'dotation')
-                ->where('est_actif', 1)
-                ->distinct()
-                ->pluck('numero');
-
-            // Calculer le total des dotations pour la période
-            $totalDotations = DB::table('plans_amortissement')
-                ->where('dossier_id', $dossierId)
-                ->where('date_derniere_cloture', $dateDerniereCloture)
-                ->where('date_prochaine_cloture', $dateProchaineCloture)
-                ->sum('dotation_periode');
-
-            // Générer les écritures comptables pour chaque numéro de compte de type dotation
-            foreach ($comptesDotation as $numero) {
-                // Écrire la ligne pour ce compte (Débit)
+            // Générer les écritures comptables pour les comptes de dotation (Débit)
+            foreach ($comptesDotation as $compte) {
                 fputcsv($file, [
-                    $dateProchaineClotureFormatee, // Date (date_prochaine_cloture)
-                    "OD",                          // Journal (toujours "OD")
-                    $numero,                       // Compte
-                    $referencePiece,               // Libellé (même que Référence Pièce)
-                    number_format($totalDotations, 2, ',', ' '), // Débit
+                    $dateProchaineClotureFormatee, // Date
+                    "OD",                          // Journal
+                    $compte->numero,               // Compte
+                    $referencePiece,               // Libellé
+                    number_format($compte->montant_total, 2, ',', ' '), // Débit
                     '',                            // Crédit
                     $referencePiece                // Référence Pièce
                 ], ";");
             }
 
-            // Générer les écritures comptables pour chaque numéro de compte de type amortissement
-            foreach ($comptesAmortissement as $numero) {
-                // Écrire la ligne pour ce compte (Crédit)
+            // ÉCRITURES D'AMORTISSEMENT (CRÉDIT) - Une requête ultra simple
+            $comptesAmortissement = DB::table('plans_amortissement as p')
+                ->join('comptescompta as c', 'p.comptecompta_amortissement_id', '=', 'c.id')
+                ->where('p.dossier_id', $dossierId)
+                ->where('p.date_derniere_cloture', $dateDerniereCloture)
+                ->where('p.date_prochaine_cloture', $dateProchaineCloture)
+                ->select('c.numero', DB::raw('SUM(p.dotation_periode) as montant_total'))
+                ->groupBy('c.numero')
+                ->get();
+
+            // Générer les écritures comptables pour les comptes d'amortissement (Crédit)
+            foreach ($comptesAmortissement as $compte) {
                 fputcsv($file, [
-                    $dateProchaineClotureFormatee, // Date (date_prochaine_cloture)
-                    "OD",                          // Journal (toujours "OD")
-                    $numero,                       // Compte
-                    $referencePiece,               // Libellé (même que Référence Pièce)
+                    $dateProchaineClotureFormatee, // Date
+                    "OD",                          // Journal
+                    $compte->numero,               // Compte
+                    $referencePiece,               // Libellé
                     '',                            // Débit
-                    number_format($totalDotations, 2, ',', ' '), // Crédit
+                    number_format($compte->montant_total, 2, ',', ' '), // Crédit
                     $referencePiece                // Référence Pièce
                 ], ";");
             }
@@ -419,6 +408,7 @@ class ExportController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
 
     /**
      * Generate CSV file for raw Immobilisations table export.
@@ -476,3 +466,4 @@ class ExportController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 }
+
